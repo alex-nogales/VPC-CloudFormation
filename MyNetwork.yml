@@ -1,5 +1,17 @@
 AWSTemplateFormatVersion: 2010-09-09
 # Este stack genera una VPC y sus componentes de redes
+Parameters:
+  NumberOfAZs:
+    Type: Number
+    AllowedValues:
+    - 1
+    - 2
+    - 3
+    Default: 2
+    Description: Cantidad de AZ que quieras utilizar?
+Conditions: 
+  BuildPublicB: !Not [ !Equals [ !Ref NumberOfAZs, 1 ]]
+  BuildPublicC: !Equals [ !Ref NumberOfAZs, 3 ]
 Resources:
   # Creacion de la VPC:
   VPC:
