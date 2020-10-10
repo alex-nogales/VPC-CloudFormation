@@ -77,4 +77,6 @@ Desde AWS CLI utilizamos el siguiente comando: `aws cloudformation delete-stack 
 - Internet Gateway: https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html
 - NAT Gateway: https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat.html
 
-
+## Guia completa creada por Ken Krugger
+- Parte 1: https://www.infoq.com/articles/aws-vpc-cloudformation/
+- Parte 2: https://www.infoq.com/articles/aws-vpc-cloudformation-part2/
