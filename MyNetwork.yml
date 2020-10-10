@@ -1,0 +1,14 @@
+AWSTemplateFormatVersion: 2010-09-09
+# Este template genera una VPC basica junto a todas sus redes. 
+Resources:
+  # Creacion de la VPC:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.1.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+      - Key: Name
+        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
+
