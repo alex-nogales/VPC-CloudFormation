@@ -17,7 +17,7 @@ Resources:
     DependsOn: VPC
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
-    Propierties:
+    Properties:
       VpcId: !Ref VPC
       InternetGatewayId: !Ref InternetGateway
   # Subnets, dos publicas y dos privadas
@@ -26,10 +26,9 @@ Resources:
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.1.10.0/24
-      AvailabilityZone: !Select [ 0, !GetAZs ]
+      AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list       
       Tags:
       - Key: Name
-        Value: !Sub ${AWS::StackName}-Public-A
   PublicSubnetB:
     Type: AWS::EC2::Subnet
     Properties:
@@ -121,5 +120,3 @@ Resources:
     Properties:
       SubnetId: !Ref PrivateSubnetB
       RouteTableID: !Ref PrivateRouteTable
-
-  
