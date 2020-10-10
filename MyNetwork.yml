@@ -57,4 +57,21 @@ Resources:
       Tags:
       - Key: Name 
         Value: !Sub ${AWS::StackName}-Private-B
+  # Routetables para la subnet
+  # Public RouteTable
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      VpcId: !Ref VPC
+      Tags:
+      - Key: Name
+        Value: Public
+  PublicRoute1:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
   
