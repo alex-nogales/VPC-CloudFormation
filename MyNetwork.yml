@@ -10,7 +10,7 @@ Resources:
       EnableDnsHostnames: true
       Tags:
       - Key: Name
-        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC2" ]]
+        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
   # Creacion del IGW y su attachment
   InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -115,9 +115,10 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnetA
-      RouteTableID: !Ref PrivateRouteTable
+      RouteTableId: !Ref PrivateRouteTable
   PrivateSubnetBRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnetB
-      RouteTableID: !Ref PrivateRouteTable
+      RouteTableId: !Ref PrivateRouteTable
+  
