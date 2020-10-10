@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: 2010-09-09
-# Este template genera una VPC basica junto a todas sus redes. 
+# Este stack genera una VPC y sus componentes de redes
 Resources:
   # Creacion de la VPC:
   VPC:
@@ -10,5 +10,16 @@ Resources:
       EnableDnsHostnames: true
       Tags:
       - Key: Name
-        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC" ]]
+        Value:  !Join ['', [!Ref "AWS::StackName", "-VPC2" ]]
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    DependsOn: VPC
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Propierties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+    
+        
+  
 
