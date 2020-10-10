@@ -44,6 +44,7 @@ Resources:
         Value: !Sub ${AWS::StackName}-Public-A
   PublicSubnetB:
     Type: AWS::EC2::Subnet
+    Condition: BuildPublicB
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.1.20.0/24
@@ -51,6 +52,16 @@ Resources:
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Public-B
+  PublicSubnetC:
+    Type: AWS::EC2::Subnet
+    Condition: BuildPublicC
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.1.30.0/24
+      AvailabilityZone: !Select [ 2, !GetAZs ]
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-Public-C
   PrivateSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
@@ -120,8 +131,15 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
   PublicSubnetBRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    Condition: BuildPublicB
     Properties:
       SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref PublicRouteTable
+  PublicSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Condition: BuildPublicC
+    Properties:
+      SubnetId: !Ref PublicSubnetC
       RouteTableId: !Ref PublicRouteTable
   PrivateSubnetARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
