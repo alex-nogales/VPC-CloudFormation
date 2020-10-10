@@ -9,9 +9,20 @@ Parameters:
     - 3
     Default: 2
     Description: Cantidad de AZ que quieras utilizar?
+  PrivateSubnets:
+    Type: String
+    AllowedValues:
+    - True 
+    - False 
+    Default: True 
+    Description: Quieres crear una subnet privada ademas de la publica?
 Conditions: 
   BuildPublicB: !Not [ !Equals [ !Ref NumberOfAZs, 1 ]]
   BuildPublicC: !Equals [ !Ref NumberOfAZs, 3 ]
+  BuildPrivateSubnets: !Equals [ !Ref PrivateSubnets, True ]
+  BuildPrivateA:  !Equals [ !Ref PrivateSubnets, True ]
+  BuildPrivateB:  !And [ !Not [ !Equals [ !Ref NumberOfAZs,1]],!Equals [!Ref PrivateSubnets, True]]
+  BuildPrivateC:  !And [!Equals [!Ref NumberOfAZs, 3], !Equals [!Ref PrivateSubnets, True]]
 Resources:
   # Creacion de la VPC:
   VPC:
@@ -64,6 +75,7 @@ Resources:
         Value: !Sub ${AWS::StackName}-Public-C
   PrivateSubnetA:
     Type: AWS::EC2::Subnet
+    Condition: BuildPrivateA
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.1.50.0/24
@@ -73,13 +85,21 @@ Resources:
         Value: !Sub ${AWS::StackName}-Private-A
   PrivateSubnetB:
     Type: AWS::EC2::Subnet
+    Condition: BuildPrivateB
     Properties:
       VpcId: !Ref VPC
       CidrBlock: 10.1.60.0/24
-      AvailabilityZone: !Select [ 0, !GetAZs ]
+      AvailabilityZone: !Select [ 1, !GetAZs ]
       Tags:
       - Key: Name 
         Value: !Sub ${AWS::StackName}-Private-B
+  PrivateSubnetC:
+    Type: AWS::EC2::Subnet
+    Condition: BuildPrivateC
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.1.70.0/24
+      AvailabilityZone: !Select [ 2, !GetAZs ]
   # Routetables para la subnet
   # Public RouteTable
   PublicRouteTable:
@@ -143,12 +163,20 @@ Resources:
       RouteTableId: !Ref PublicRouteTable
   PrivateSubnetARouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    Condition: BuildPrivateA
     Properties:
       SubnetId: !Ref PrivateSubnetA
       RouteTableId: !Ref PrivateRouteTable
   PrivateSubnetBRouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
+    Condition: BuildPrivateB
     Properties:
       SubnetId: !Ref PrivateSubnetB
+      RouteTableId: !Ref PrivateRouteTable
+  PrivateSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Condition: BuildPrivateC
+    Properties:
+      SubnetId: !Ref PrivateSubnetC
       RouteTableId: !Ref PrivateRouteTable
   
