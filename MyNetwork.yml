@@ -119,6 +119,7 @@ Resources:
   # Private RouteTable
   PrivateRouteTable:
     Type: AWS::EC2::RouteTable
+    Condition: BuildPrivateSubnets
     Properties:
       VpcId: !Ref VPC
       Tags:
@@ -126,6 +127,7 @@ Resources:
         Value: Private
   PrivateRoute1:
     Type: AWS::EC2::Route
+    Condition: BuildPrivateSubnets
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
@@ -133,6 +135,7 @@ Resources:
   # Creacion del NAT Gateway
   NATGateway:
     Type: AWS::EC2::NatGateway
+    Condition: BuildPrivateSubnets
     Properties:
       AllocationId: !GetAtt ElasticIPAddress.AllocationId
       SubnetId: !Ref PublicSubnetA
@@ -141,6 +144,7 @@ Resources:
         Value: !Sub NAT-${AWS::StackName}
   ElasticIPAddress:
     Type: AWS::EC2::EIP
+    Condition: BuildPrivateSubnets
     Properties:
       Domain: VPC
   # Asociar las subnets con sus respectivas routetables
