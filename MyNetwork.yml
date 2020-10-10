@@ -29,6 +29,7 @@ Resources:
       AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list       
       Tags:
       - Key: Name
+        Value: !Sub ${AWS::StackName}-Public-A
   PublicSubnetB:
     Type: AWS::EC2::Subnet
     Properties:
